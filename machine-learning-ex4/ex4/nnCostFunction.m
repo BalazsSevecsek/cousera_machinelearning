@@ -63,17 +63,17 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 %Feedforward
-%X' is input_layer_size+1 x m
-a1=[ones(1,m);X'];
-%hidden_layer_size x m=(hidden_layer_size x input_layer_size+1)*(input_layer_size+1 x m)
-z2=Theta1*a1;
+%X is m x input_layer_size+1
+a1=[ones(m,1) X];
+%=(m x input_layer_size+1)*(input_layer_size+1 x hidden_layer_size)
+z2=a1*Theta1';
 a2=sigmoid(z2);
-a2= [ones(1,m);a2];
-%output_layer_size x m=(output_layer_size x hidden_layer_size+1)*(hidden_layer_size+1 x m)
-z3=Theta2*a2;
-a3=sigmoid(z3); %num_labelsORoutput_layer_size*m
+a2= [ones(m,1) a2];
+%m x output_layer_size=(m x hidden_layer_size+1)*(hidden_layer_size+1 x output_layer_size)
+z3=a2*Theta2';
+a3=sigmoid(z3);
 %m x output_size
-hypothesis = a3';
+hypothesis = a3;
 
 %y_matrix = eye(num_labels)(y,:);
 % m x num_labels
@@ -83,7 +83,8 @@ for i = 1:m
   y_matrix(i, :) = matrix_to_choose_row_from(y(i), :);
 end
 
-regularization = (lambda/(2*m))*(sum(Theta1(:).^2)+sum(Theta2(:).^2));
+%bias terms are not regularized
+regularization = (lambda/(2*m))*(sum((Theta1(:,2:end).^2)(:))+sum((Theta2(:,2:end).^2)(:)));
 cost = (sum(sum(y_matrix.*log(hypothesis)+(1-y_matrix).*log(1-hypothesis))))*(-1/m);
 J= cost + regularization;
 
