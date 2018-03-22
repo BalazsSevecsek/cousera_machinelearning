@@ -89,6 +89,21 @@ cost = (sum(sum(y_matrix.*log(hypothesis)+(1-y_matrix).*log(1-hypothesis))))*(-1
 J= cost + regularization;
 
 
+%calculate backpropagation
+% m x output_layer_size
+d3=a3-y;
+%(m x output_layer_size)=(m x output_layer_size)*(output_layer_size x hidden_layer_size+1).*(m*hidden_layer_size)
+d2=d3*Theta2*.sigmoidGradient(z2);
+%no d1--no error for input
+
+%sum of all the errors of a certain layer
+% sum((m x output_layer_size)*(output_layer_size+1 x m))
+small_delta2 = sum(d3*a2');
+small_delta1 = sum(d2*a1');
+
+Big_Delta2 = (1/m)*small_delta2+lambda*Theta2(:,1:end-1);
+Big_Delta1 = (1/m)*small_delta1+lambda*Theta1(:,1:end-1);
+
 % -------------------------------------------------------------
 
 % =========================================================================
