@@ -64,13 +64,14 @@ Theta2_grad = zeros(size(Theta2));
 
 %Feedforward
 %X is m x input_layer_size+1
-a1=[ones(m,1) X];
+a1=X;
+a1_with_bias=[ones(m,1) X];
 %=(m x input_layer_size+1)*(input_layer_size+1 x hidden_layer_size)
-z2=a1*Theta1';
+z2=a1_with_bias*Theta1';
 a2=sigmoid(z2);
-a2= [ones(m,1) a2];
+a2_with_bias= [ones(m,1) a2];
 %m x output_layer_size=(m x hidden_layer_size+1)*(hidden_layer_size+1 x output_layer_size)
-z3=a2*Theta2';
+z3=a2_with_bias*Theta2';
 a3=sigmoid(z3);
 %m x output_size
 hypothesis = a3;
@@ -92,17 +93,18 @@ J= cost + regularization;
 %calculate backpropagation
 % m x output_layer_size
 d3=a3-y;
-%(m x output_layer_size)=(m x output_layer_size)*(output_layer_size x hidden_layer_size+1).*(m*hidden_layer_size)
-d2=d3*Theta2*.sigmoidGradient(z2);
+%(m x hidden_layer_size)=(m x output_layer_size)*(output_layer_size x hidden_layer_size).*(m*hidden_layer_size)
+d2=d3*Theta2(:,2:end).* sigmoidGradient(z2);
 %no d1--no error for input
 
 %sum of all the errors of a certain layer
-% sum((m x output_layer_size)*(output_layer_size+1 x m))
-small_delta2 = sum(d3*a2');
-small_delta1 = sum(d2*a1');
+% sum((input_layer_size x m)*(m x hidden_layer_size))
+small_delta1 = sum(sum(a1'*d2));
+% sum((output_layer_size x m)*(m x output_layer_size))
+small_delta2 = sum(sum(a2'*d3));
 
-Big_Delta2 = (1/m)*small_delta2+lambda*Theta2(:,1:end-1);
-Big_Delta1 = (1/m)*small_delta1+lambda*Theta1(:,1:end-1);
+Big_Delta2 = (1/m)*small_delta2+lambda*Theta2(:,2:end);
+Big_Delta1 = (1/m)*small_delta1+lambda*Theta1(:,2:end);
 
 % -------------------------------------------------------------
 
