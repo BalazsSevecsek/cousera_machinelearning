@@ -63,10 +63,10 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 %Feedforward
-%X is m x input_layer_size+1
+%a1_with_bias= m x input_layer_size+1
 a1=X;
 a1_with_bias=[ones(m,1) X];
-%=(m x input_layer_size+1)*(input_layer_size+1 x hidden_layer_size)
+%a2=(m x input_layer_size+1)*(input_layer_size+1 x hidden_layer_size)
 z2=a1_with_bias*Theta1';
 a2=sigmoid(z2);
 a2_with_bias= [ones(m,1) a2];
@@ -91,21 +91,31 @@ J= cost + regularization;
 
 
 %calculate backpropagation
+%bias terms should be included---it backpropagates to the bias unit as well
 % m x output_layer_size
 d3=a3-y;
-%(m x hidden_layer_size)=(m x output_layer_size)*(output_layer_size x hidden_layer_size).*(m*hidden_layer_size)
-d2=d3*Theta2(:,2:end).* sigmoidGradient(z2);
+%(m x hidden_layer_size+1)=(m x output_layer_size)*(output_layer_size x hidden_layer_size+1).*(m*hidden_layer_size)
+%BIAS TERM IS CALCULATED INTO IT, BUT LATER DROPPED
+d2=d3*Theta2.* [ones(m,1) sigmoidGradient(z2)];
 %no d1--no error for input
 
 %sum of all the errors of a certain layer
-% sum((input_layer_size x m)*(m x hidden_layer_size))
-small_delta1 = sum(sum(a1'*d2));
-% sum((output_layer_size x m)*(m x output_layer_size))
-small_delta2 = sum(sum(a2'*d3));
+%MUST BE THE SAME DIMENSION AS THETAs
+%BIAS TERM SHOULD BE LEFT OUT
+% (hidden_layer_size x input_layer_size+1)=*(hidden_layer_size x m)*(m x input_layer_size+1)
+% SAME DIMENSION AS THETA 1
+small_delta1 = d2(:,2:end)'*a1_with_bias;
+% (output_layer_size x hidden_layer_size+1)=(output_layer_size x m)*(m x hidden_layer_size+1)
+%SAME DIMENSION AS THETA 2
+small_delta2 = d3'*a2_with_bias;
 
-Big_Delta2 = (1/m)*small_delta2+lambda*Theta2(:,2:end);
-Big_Delta1 = (1/m)*small_delta1+lambda*Theta1(:,2:end);
+%gradient without regularization
+Theta1_grad += (1/m)*small_delta1;
+Theta2_grad += (1/m)*small_delta2;
 
+%gradient with regularization
+Theta1_grad(:,2:end) += (lambda/m)*Theta1(:,2:end);
+Theta2_grad(:,2:end) += (lambda/m)*Theta2(:,2:end);
 % -------------------------------------------------------------
 
 % =========================================================================
