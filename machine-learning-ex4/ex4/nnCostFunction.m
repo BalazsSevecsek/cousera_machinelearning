@@ -93,7 +93,7 @@ J= cost + regularization;
 %calculate backpropagation
 %bias terms should be included---it backpropagates to the bias unit as well
 % m x output_layer_size
-d3=a3-y;
+d3=a3-y_matrix;
 %(m x hidden_layer_size+1)=(m x output_layer_size)*(output_layer_size x hidden_layer_size+1).*(m*hidden_layer_size)
 %BIAS TERM IS CALCULATED INTO IT, BUT LATER DROPPED
 d2=d3*Theta2.* [ones(m,1) sigmoidGradient(z2)];
