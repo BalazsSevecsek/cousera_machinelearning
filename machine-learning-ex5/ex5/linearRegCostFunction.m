@@ -19,16 +19,15 @@ grad = zeros(size(theta));
 %               You should set J to the cost and grad to the gradient.
 %
 
+%first parameter is not regularized
+regularization = (lambda/(2*m))*theta(2:end)'*theta(2:end);
 
+%t0+t1*x1+t2*x2...
+hypothesis = X*theta;
+error = hypothesis-y;
+cost = (1/(2*m))*error'*error;
 
-
-
-
-
-
-
-
-
+J= cost+regularization;
 
 % =========================================================================
 
