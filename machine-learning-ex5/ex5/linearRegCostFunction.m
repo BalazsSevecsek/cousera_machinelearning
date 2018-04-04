@@ -29,6 +29,16 @@ cost = (1/(2*m))*error'*error;
 
 J= cost+regularization;
 
+%GRADIENT
+%gradient of regularization
+regularization_derived= (lambda/m)*theta(2:end);
+
+%X is a (m x n) matrix if there are n parameters
+gradient_without_regularization = (1/m)*X'*error;
+
+%bias term does not get regularized
+grad(1) = gradient_without_regularization(1);
+grad(2:end) = gradient_without_regularization(2:end)+regularization_derived;
 % =========================================================================
 
 grad = grad(:);
