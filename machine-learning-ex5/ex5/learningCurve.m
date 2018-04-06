@@ -52,10 +52,30 @@ error_val   = zeros(m, 1);
 %
 
 % ---------------------- Sample Solution ----------------------
+for i = 1:m
 
+%select the first i element of the training data
+X_selected = X(1:i,:);
+y_selected = y(1:i);
 
+%train linear regression
+theta = trainLinearReg(X_selected,y_selected,0);  
 
+%calculate hypothesis and J_train for the selected training data only
+hypothesis_train = X_selected*theta;
+error_training = hypothesis_train-y_selected;
+J_train = (1/(2*m))*error_training'*error_training;
+%writing out the result training error to the i element vector
+error_train(i)=J_train;
 
+%calculate hypothesis and J_cv for the cross-validation only
+hypothesis_cv = Xval*theta;
+error_cv= hypothesis_cv-yval;
+J_cv = (1/(2*m))*error_cv'*error_cv;
+%writing out the result training error to the i element vector
+error_val(i) = J_cv;
+
+end
 
 
 
