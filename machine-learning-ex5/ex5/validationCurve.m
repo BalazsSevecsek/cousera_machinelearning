@@ -38,8 +38,16 @@ error_val = zeros(length(lambda_vec), 1);
 %       end
 %
 %
-
-
+lambda_size = size(lambda_vec);
+for i = 1:lambda_size
+  %calculating theta for specific lambda regularization
+  theta = trainLinearReg(X,y,lambda_vec(i));
+  %calculating J_train
+  error_train(i)=linearRegCostFunction(X,y,theta,0);  
+  
+  %calculating J_cv
+  error_val(i)=linearRegCostFunction(Xval,yval,theta,0);
+end
 
 
 
