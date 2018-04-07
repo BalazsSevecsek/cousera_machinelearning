@@ -164,7 +164,7 @@ pause;
 %  lambda to see how the fit and learning curve change.
 %
 
-lambda = 1;
+lambda = 3;
 [theta] = trainLinearReg(X_poly, y, lambda);
 
 % Plot training data and fit
@@ -217,4 +217,17 @@ for i = 1:length(lambda_vec)
 end
 
 fprintf('Program paused. Press enter to continue.\n');
+pause;
+
+%% =========== Optional Part 9: Test set error for specific lambda =============
+J_test = testSetError (X_poly_test,ytest,theta);
+fprintf('The value of the test set error against lambda: %f is %f \n',lambda,J_test);
+
+%% =========== Optional Part 10: Test logistic regression against the average of randomly selected training and error sets =============
+%not going to do it, but basically you pick a random i number of training 
+%examples and cross validation examples and then learn theta with the first 
+%and then calculate the training error and cross validation error for the 
+%evaluation. If you do this randomly F times and then you calculate the average
+% of the outcomes that will show you a good picture of the training and cross 
+%validation error for i examples!!!!!!!
 pause;
