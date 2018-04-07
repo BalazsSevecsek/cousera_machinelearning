@@ -54,27 +54,32 @@ error_val   = zeros(m, 1);
 % ---------------------- Sample Solution ----------------------
 for i = 1:m
 
-%select the first i element of the training data
-X_selected = X(1:i,:);
-y_selected = y(1:i);
+  %select the first i element of the training data
+  X_selected = X(1:i,:);
+  y_selected = y(1:i);
 
-%train linear regression
-theta = trainLinearReg(X_selected,y_selected,0);  
+  %train linear regression
+  theta = trainLinearReg(X_selected,y_selected,lambda);  
 
-%calculate hypothesis and J_train for the selected training data only
-hypothesis_train = X_selected*theta;
-error_training = hypothesis_train-y_selected;
-J_train = (1/(2*m))*error_training'*error_training;
-%writing out the result training error to the i element vector
-error_train(i)=J_train;
+  %calculate hypothesis and J_train for the selected training data only
+  hypothesis_train = X_selected*theta;
+  error_training = hypothesis_train-y_selected;
+  J_train = (1/(2*size(X_selected,1)))*error_training'*error_training;
+  %writing out the result training error to the i element vector
+  
+  %Same as the previous lines
+  %  J_train = linearRegCostFunction(X_selected,y_selected,theta,0);
+  error_train(i)=J_train;
 
-%calculate hypothesis and J_cv for the cross-validation only
-hypothesis_cv = Xval*theta;
-error_cv= hypothesis_cv-yval;
-J_cv = (1/(2*m))*error_cv'*error_cv;
-%writing out the result training error to the i element vector
-error_val(i) = J_cv;
-
+  %calculate hypothesis and J_cv for the cross-validation only
+  hypothesis_cv = Xval*theta;
+  error_cv= hypothesis_cv-yval;
+  J_cv = (1/(2*size(Xval,1)))*error_cv'*error_cv;
+  %writing out the result training error to the i element vector
+ 
+  %same as the previous lines 
+  %  J_cv = linearRegCostFunction(Xval,yval,theta,0);
+  error_val(i) = J_cv;
 end
 
 
