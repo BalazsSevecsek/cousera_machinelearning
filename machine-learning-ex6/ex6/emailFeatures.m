@@ -48,6 +48,11 @@ x = zeros(n, 1);
 %
 %
 
+for i = word_indices
+if(x(i)==0)
+  x(i)=1;
+endif
+endfor
 
 
 
