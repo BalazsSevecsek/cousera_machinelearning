@@ -26,12 +26,13 @@ centroids = zeros(K, n);
 % Note: You can use a for-loop over the centroids to compute this.
 %
 
+for centroid_idx = 1:K
+correspondingRows = find(idx==centroid_idx);
 
-
-
-
-
-
+%we select multiple rows from the idx vector and by that multiple rows from X as well
+%sum summarizes according to rows and not columns
+centroids(centroid_idx,:)=1/length(correspondingRows).*sum(X(correspondingRows,:));
+endfor
 
 % =============================================================
 

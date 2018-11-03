@@ -22,8 +22,17 @@ idx = zeros(size(X,1), 1);
 %
 
 
-
-
+for xRowIdx = 1:size(X,1)
+  minDistance = inf;
+  for centroid_idx = 1:K
+    vector_difference= X(xRowIdx,:)-centroids(centroid_idx,:);
+    distance = vector_difference*vector_difference';
+    if(minDistance>distance)
+      minDistance=distance;
+      idx(xRowIdx)=centroid_idx;
+    endif
+endfor
+endfor
 
 
 
