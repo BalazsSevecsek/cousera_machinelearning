@@ -40,19 +40,17 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+%num_movies x num_users
+error_matrix = (X*Theta'-Y).*R;
+thetaRegularization = (lambda/2)*sum(Theta(:).^2);
+xRegularization =(lambda/2)*sum(X(:).^2);
+J=(1/2)* sum(sum(error_matrix.^2)) + thetaRegularization + xRegularization;
 
+%(num_movies x num_users) x (num_users * n)
+X_grad = error_matrix*Theta+lambda*X;
 
-
-
-
-
-
-
-
-
-
-
-
+%(num_users x num_movies) x (num_movies * n)
+Theta_grad = error_matrix'*X+lambda*Theta;
 
 
 % =============================================================
